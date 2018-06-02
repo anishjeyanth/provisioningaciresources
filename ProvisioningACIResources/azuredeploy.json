@@ -1,0 +1,158 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "containerGroupName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name for the container group"
+      }
+    },
+    "image": {
+      "type": "string",
+      "metadata": {
+        "description": "Container image to deploy. Should be of the form accountName/imagename:tag for images stored in Docker Hub or a fully qualified URI for a private registry like the Azure Container Registry."
+      }
+    },
+    "publicPort": {
+      "type": "string",
+      "metadata": {
+        "description": "Port to open on the container and the public IP address."
+      }
+    },
+    "mongoHost": {
+      "type": "string"
+    },
+    "mongoPort": {
+      "type": "string"
+    },
+    "mongoDb": {
+      "type": "string"
+    },
+    "mongoUserName": {
+      "type": "string"
+    },
+    "mongoPassword": {
+      "type": "string"
+    },
+    "enableStaticContents": {
+      "type": "string"
+    },
+    "globalSecretKey": {
+      "type": "string"
+    },
+    "containerRegistryName": {
+      "type": "string"
+    },
+    "containerRegistryUserName": {
+      "type": "string"
+    },
+    "containerRegistryPassword": {
+      "type": "string"
+    },
+    "cpuCores": {
+      "type": "string",
+      "metadata": {
+        "description": "The number of CPU cores to allocate to the container. Must be an integer."
+      },
+      "defaultValue": "1.0"
+    },
+    "memoryInGb": {
+      "type": "string",
+      "metadata": {
+        "description": "The amount of memory to allocate to the container in gigabytes."
+      },
+      "defaultValue": "1.5"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources."
+      }
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "name": "[parameters('containerGroupName')]",
+      "type": "Microsoft.ContainerInstance/containerGroups",
+      "apiVersion": "2017-08-01-preview",
+      "location": "[parameters('location')]",
+      "properties": {
+        "containers": [
+          {
+            "name": "[parameters('containerGroupName')]",
+            "properties": {
+              "image": "[parameters('image')]",
+              "environmentVariables": [
+                {
+                  "name": "MONGO_HOST",
+                  "value": "[parameters('mongoHost')]"
+                },
+                {
+                  "name": "MONGO_PORT",
+                  "value": "[parameters('mongoPort')]"
+                },
+                {
+                  "name": "MONGO_DB",
+                  "value": "[parameters('mongoDb')]"
+                },
+                {
+                  "name": "USER_NAME",
+                  "value": "[parameters('mongoUserName')]"
+                },
+                {
+                  "name": "DB_PASSWORD",
+                  "value": "[parameters('mongoPassword')]"
+                },
+                {
+                  "name": "ENABLE_STATIC_CONTENTS",
+                  "value": "[parameters('enableStaticContents')]"
+                },
+                {
+                  "name": "GLOBAL_SECRET_KEY",
+                  "value": "[parameters('globalSecretKey')]"
+                }
+              ],
+              "ports": [
+                {
+                  "port": "[parameters('publicPort')]"
+                }
+              ],
+              "resources": {
+                "requests": {
+                  "cpu": "[parameters('cpuCores')]",
+                  "memoryInGb": "[parameters('memoryInGb')]"
+                }
+              }
+            }
+          }
+        ],
+        "imageRegistryCredentials": [
+          {
+            "server": "[parameters('containerRegistryName')]",
+            "username": "[parameters('containerRegistryUserName')]",
+            "password": "[parameters('containerRegistryPassword')]"
+          }
+        ],
+        "osType": "Linux",
+        "ipAddress": {
+          "type": "Public",
+          "ports": [
+            {
+              "protocol": "tcp",
+              "port": "[parameters('publicPort')]"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "containerIPv4Address": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.ContainerInstance/containerGroups/', parameters('containerGroupName'))).ipAddress.ip]"
+    }
+  }
+}

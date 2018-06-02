@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "containerGroupName": { "value": "iomegacontainergroup" },
+    "image": { "value": "iomegacontainerregistry.azurecr.io/eyprofessionalnodecasestudyv2:latest" },
+    "publicPort": { "value": "9090" },
+    "mongoHost": { "value": "iomegamongoserver.documents.azure.com" },
+    "mongoPort": { "value": "10255" },
+    "mongoDb": { "value": "eycrmsystemdbv2" },
+    "mongoUserName": { "value": "iomegamongoserver" },
+    "mongoPassword": { "value": "RzJ5V1ByalhPN3FnMDRDaGNRdjNZelB2clFuSmc0QVpINkRCY3BWUjBLY0gwVm8wOGlhYURiU1ltTnpiaUNZTmYySno4Z1pJdGxGZzJhN1RzV3o4aHc9PQ==" },
+    "enableStaticContents": { "value": "True" },
+    "globalSecretKey": { "value": "EYTrivandrumKLIN" },
+    "containerRegistryName": { "value": "iomegacontainerregistry.azurecr.io" },
+    "containerRegistryUserName": { "value": "iomegacontainerregistry" },
+    "containerRegistryPassword": { "value": "0V/vDLdW6Q6mDmNSv0owhwtuFsGTaAGw" }
+  }
+}
